@@ -3,7 +3,6 @@ import { Heading } from '@/components/ui/heading';
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button"
-import { Divider } from '@/components/ui/divider';
 
 
 export default function Index() {
@@ -19,7 +18,7 @@ export default function Index() {
       <Heading className="text-center px-24" size="xl">
         Inicie uma revolução na sua vida alimentar.
       </Heading>
-      <Button size="sm" className="mx-12 p-2 rounded-md bg-primary-700">
+      <Button className="mx-12 p-2 rounded-md bg-primary-700">
         <ButtonText className="text-center color-white">Entrar</ButtonText>
       </Button>
       <Box className='flex flex-row justify-center my-4'>
@@ -31,11 +30,11 @@ export default function Index() {
       <Box className='flex flex-row justify-center my-4'>
         <Text>Vai acompanhar alguém?</Text>
       </Box>
-      <Button size="sm" className="mx-12 p-2 rounded-md bg-transparent border border-gray-300">
-        <ButtonText className="text-center color-primary-700">Entrar</ButtonText>
+      <Button className="mx-12 p-2 rounded-md bg-transparent border border-gray-300">
+        <ButtonText className="text-center color-primary-700">Sou Profissional</ButtonText>
       </Button>
-      <Button size="sm" className="mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300">
-        <ButtonText className="text-center color-primary-700">Entrar</ButtonText>
+      <Button className="mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300">
+        <ButtonText className="text-center color-primary-700">Sou Supervisor</ButtonText>
       </Button>
     </Center>
     </>
