@@ -3,12 +3,11 @@ import { Heading } from '@/components/ui/heading';
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button"
-import { useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 import { Pressable } from 'react-native';
 
 
 export default function Index() {
-  const navigation = useNavigation();
 
   return (
     <>
@@ -26,14 +25,14 @@ export default function Index() {
 
         <Button
           className="w-full mx-12 p-2 rounded-md bg-primary-700"
-          onPress={() => navigation.navigate('login')}
+          onPress={() => router.navigate('/login')}
         >
           <ButtonText className="text-center color-white">Entrar</ButtonText>
         </Button>
 
         <Box className='flex flex-row justify-center my-4'>
           <Text>Não tem conta? </Text>
-          <Pressable onPress={() => navigation.navigate('signup/user')}>
+          <Pressable onPress={() => router.navigate('/signup/user')}>
 
             <Text underline className='color-primary-700'>Cadastre-se</Text>
           </Pressable>
@@ -48,12 +47,15 @@ export default function Index() {
 
         <Button
           className="w-full mx-12 p-2 rounded-md bg-transparent border border-gray-300"
-          onPress={() => navigation.navigate('signup/professional')}
+          onPress={() => router.navigate('/signup/professional')}
         >
           <ButtonText className="text-center color-primary-700">Sou Profissional</ButtonText>
         </Button>
 
-        <Button className="w-full mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300">
+        <Button
+          className="w-full mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300"
+          onPress={() => router.navigate('/signup/supervisor')}
+        >
           <ButtonText className="text-center color-primary-700">Sou Supervisor</ButtonText>
         </Button>
       </Center >

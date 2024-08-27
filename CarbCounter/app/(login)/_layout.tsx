@@ -8,6 +8,7 @@ export default function LoginLayout() {
 			<Stack.Screen name="login" />
 			<Stack.Screen name="signup/user" />
 			<Stack.Screen name="signup/professional" />
+			<Stack.Screen name="signup/supervisor" />
 		</Stack>
 	);
 }
