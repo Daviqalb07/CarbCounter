@@ -66,7 +66,7 @@ export default function UserSignUpScreen() {
           placeholder="Seu email"
           keyboardType='email-address'
         />
-        {!errors.password ? '' : (
+        {!errors.email ? '' : (
           <FormControlErrorText>Email inválido.</FormControlErrorText>
         )}
       </FormControl>
@@ -80,9 +80,8 @@ export default function UserSignUpScreen() {
           value={birthdate}
           onChangeText={setBirthdate}
           placeholder="__/__/____"
-          secureTextEntry
         />
-        {!errors.password ? '' : (
+        {!errors.birthdate ? '' : (
           <FormControlErrorText>Data de nascimento inválida.</FormControlErrorText>
         )}
       </FormControl>
@@ -139,7 +138,7 @@ export default function UserSignUpScreen() {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#004d40',
+    backgroundColor: '#006769',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',

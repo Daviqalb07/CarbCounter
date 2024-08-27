@@ -3,8 +3,8 @@ import { Heading } from '@/components/ui/heading';
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button"
+import { Pressable } from '@/components/ui/pressable';
 import { router } from 'expo-router';
-import { Pressable } from 'react-native';
 
 
 export default function Index() {
@@ -18,7 +18,7 @@ export default function Index() {
         CarbCounter
       </Heading>
 
-      <Center className="mt-24 px-12">
+      <Center className="mt-24 px-12 items-center">
         <Heading className="text-center px-12" size="xl">
           Inicie uma revolução na sua vida alimentar.
         </Heading>
@@ -33,7 +33,6 @@ export default function Index() {
         <Box className='flex flex-row justify-center my-4'>
           <Text>Não tem conta? </Text>
           <Pressable onPress={() => router.navigate('/signup/user')}>
-
             <Text underline className='color-primary-700'>Cadastre-se</Text>
           </Pressable>
           <Text>!</Text>

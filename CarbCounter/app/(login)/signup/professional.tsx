@@ -82,12 +82,12 @@ export default function ProfessionalSignUpScreen() {
           placeholder="Seu email"
           keyboardType='email-address'
         />
-        {!errors.password ? '' : (
+        {!errors.email ? '' : (
           <FormControlErrorText>Email inválido.</FormControlErrorText>
         )}
       </FormControl>
 
-      <FormControl isInvalid={errors.email} className='mb-3.5'>
+      <FormControl isInvalid={errors.professionalRegister} className='mb-3.5'>
         <FormControlLabel>
           <FormControlLabelText className='font-semibold text-lg'>CRM ou CRN</FormControlLabelText>
         </FormControlLabel>
@@ -97,7 +97,7 @@ export default function ProfessionalSignUpScreen() {
           onChangeText={setProfessionalRegister}
           placeholder="Seu registro profissional"
         />
-        {!errors.password ? '' : (
+        {!errors.professionalRegister ? '' : (
           <FormControlErrorText>Registro inválido.</FormControlErrorText>
         )}
       </FormControl>
@@ -111,9 +111,8 @@ export default function ProfessionalSignUpScreen() {
           value={birthdate}
           onChangeText={setBirthdate}
           placeholder="__/__/____"
-          secureTextEntry
         />
-        {!errors.password ? '' : (
+        {!errors.birthdate ? '' : (
           <FormControlErrorText>Data de nascimento inválida.</FormControlErrorText>
         )}
       </FormControl>
@@ -170,7 +169,7 @@ export default function ProfessionalSignUpScreen() {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#004d40',
+    backgroundColor: '#006769',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
