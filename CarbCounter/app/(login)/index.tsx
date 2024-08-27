@@ -3,40 +3,60 @@ import { Heading } from '@/components/ui/heading';
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button"
+import { useNavigation } from 'expo-router';
+import { Pressable } from 'react-native';
 
 
 export default function Index() {
+  const navigation = useNavigation();
+
   return (
     <>
-    <Heading
-      className="color-primary-700 text-center mt-24"
-      size="2xl"
-    >
-      CarbCounter
-    </Heading>
-    <Center className="mt-24">
-      <Heading className="text-center px-24" size="xl">
-        Inicie uma revolução na sua vida alimentar.
+      <Heading
+        className="color-primary-700 text-center mt-24"
+        size="2xl"
+      >
+        CarbCounter
       </Heading>
-      <Button className="mx-12 p-2 rounded-md bg-primary-700">
-        <ButtonText className="text-center color-white">Entrar</ButtonText>
-      </Button>
-      <Box className='flex flex-row justify-center my-4'>
-        <Text>Não tem conta? </Text>
-        <Text underline className='color-primary-700' >Cadastre-se</Text>
-        <Text>!</Text>
-      </Box>
-      <Box className="bg-gray-300 mx-12 h-[1px]" />
-      <Box className='flex flex-row justify-center my-4'>
-        <Text>Vai acompanhar alguém?</Text>
-      </Box>
-      <Button className="mx-12 p-2 rounded-md bg-transparent border border-gray-300">
-        <ButtonText className="text-center color-primary-700">Sou Profissional</ButtonText>
-      </Button>
-      <Button className="mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300">
-        <ButtonText className="text-center color-primary-700">Sou Supervisor</ButtonText>
-      </Button>
-    </Center>
+
+      <Center className="mt-24 px-12">
+        <Heading className="text-center px-12" size="xl">
+          Inicie uma revolução na sua vida alimentar.
+        </Heading>
+
+        <Button
+          className="w-full mx-12 p-2 rounded-md bg-primary-700"
+          onPress={() => navigation.navigate('login')}
+        >
+          <ButtonText className="text-center color-white">Entrar</ButtonText>
+        </Button>
+
+        <Box className='flex flex-row justify-center my-4'>
+          <Text>Não tem conta? </Text>
+          <Pressable onPress={() => navigation.navigate('signup/user')}>
+
+            <Text underline className='color-primary-700'>Cadastre-se</Text>
+          </Pressable>
+          <Text>!</Text>
+        </Box>
+
+        <Box className="bg-gray-300 mx-12 h-[1px]" />
+
+        <Box className='flex flex-row justify-center my-4'>
+          <Text>Vai acompanhar alguém?</Text>
+        </Box>
+
+        <Button
+          className="w-full mx-12 p-2 rounded-md bg-transparent border border-gray-300"
+          onPress={() => navigation.navigate('signup/professional')}
+        >
+          <ButtonText className="text-center color-primary-700">Sou Profissional</ButtonText>
+        </Button>
+
+        <Button className="w-full mx-12 my-4 p-2 rounded-md bg-transparent border border-gray-300">
+          <ButtonText className="text-center color-primary-700">Sou Supervisor</ButtonText>
+        </Button>
+      </Center >
     </>
   );
 }
