@@ -150,7 +150,7 @@ export default function ProfessionalSignUpScreen() {
         )}
       </FormControl>
 
-      <TouchableOpacity className='bg-primary-700 py-4 rounded-lg items-center mt-5' onPress={handleSubmit}>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text className='text-white text-base'>Cadastrar</Text>
       </TouchableOpacity>
 
@@ -168,13 +168,21 @@ export default function ProfessionalSignUpScreen() {
   );
 }
 
-// const styles = StyleSheet.create({
-//     footerText: {
-//         textAlign: 'center',
-//         color: '#777',
-//     },
-//     link: {
-//         color: '#004d40',
-//         textDecorationLine: 'underline',
-//     },
-// });
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#004d40',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20
+  },
+  footerText: {
+    textAlign: 'center',
+    color: '#777',
+  },
+  link: {
+    color: '#004d40',
+    textDecorationLine: 'underline',
+  },
+});
+
