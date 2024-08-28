@@ -40,12 +40,12 @@ export function SignupForm(props: SignupFormProps) {
             <Text className='text-xl font-medium text-center mb-5'>Crie sua conta</Text>
 
             {props.fields.map((field, index) => (
-                <FormControl key={index} isInvalid={field.error} className='mb-3.5'>
+                <FormControl key={index} isInvalid={field.error} className='mb-3'>
                     <FormControlLabel>
-                        <FormControlLabelText className='font-semibold text-lg'>{field.name}</FormControlLabelText>
+                        <FormControlLabelText className='font-semibold text-md'>{field.name}</FormControlLabelText>
                     </FormControlLabel>
                     <TextInput
-                        className='border border-[#ccc] rounded-lg p-2.5 mt-1'
+                        className='border border-[#ccc] rounded-lg p-2 mt-1'
                         value={field.value}
                         onChangeText={field.onChangeText}
                         placeholder={field.placeholder}
@@ -56,7 +56,7 @@ export function SignupForm(props: SignupFormProps) {
                 </FormControl>
             ))}
 
-            <Button className='bg-primary-700 rounded-lg p-3' onPress={props.onSubmit}>
+            <Button className='bg-primary-700 rounded-lg p-3 h-14 mt-1' onPress={props.onSubmit}>
                 <ButtonText className='text-white text-base text-center'>Cadastrar</ButtonText>
             </Button>
         </View>
