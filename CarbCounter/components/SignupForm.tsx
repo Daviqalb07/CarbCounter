@@ -21,7 +21,8 @@ export interface SignupFormField {
     name: string;
     value: string;
     placeholder: string;
-    error?: string;
+    error?: boolean;
+    errorMessage?: string;
     keyboardType?: KeyboardTypeOptions;
     secureTextEntry?: boolean;
     onChangeText: (text: string) => void;
@@ -39,7 +40,7 @@ export function SignupForm(props: SignupFormProps) {
             <Text className='text-xl font-medium text-center mb-5'>Crie sua conta</Text>
 
             {props.fields.map((field, index) => (
-                <FormControl key={index} isInvalid={!!field.error} className='mb-3.5'>
+                <FormControl key={index} isInvalid={field.error} className='mb-3.5'>
                     <FormControlLabel>
                         <FormControlLabelText className='font-semibold text-lg'>{field.name}</FormControlLabelText>
                     </FormControlLabel>
@@ -51,7 +52,7 @@ export function SignupForm(props: SignupFormProps) {
                         keyboardType={field.keyboardType}
                         secureTextEntry={field.secureTextEntry}
                     />
-                    {field.error && <FormControlErrorText>{field.error}</FormControlErrorText>}
+                    {field.error && <FormControlErrorText>{field.errorMessage}</FormControlErrorText>}
                 </FormControl>
             ))}
 

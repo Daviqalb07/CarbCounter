@@ -39,39 +39,47 @@ export default function ProfessionalSignUpScreen() {
 
   const fields: SignupFormField[] = [
     {
-      name: 'Nome completo',
+      name: "Nome completo",
       value: name,
-      placeholder: 'Seu Nome',
+      placeholder: "Seu Nome",
       onChangeText: setName,
+      error: errors.name,
+      errorMessage: "Digite seu nome completo"
     },
     {
-      name: 'Email',
+      name: "Email",
       value: email,
-      placeholder: 'Seu email',
+      placeholder: "Seu email",
       onChangeText: setEmail,
-      keyboardType: 'email-address',
-      error: email.length > 0 && !email.includes('@') ? 'Email inválido' : undefined,
+      keyboardType: "email-address",
+      error: errors.email,
+      errorMessage: "Email inválido"
     },
     {
-      name: 'Data de nascimento',
+      name: "Data de nascimento",
       value: birthdate,
-      placeholder: '__/__/____',
+      placeholder: "__/__/____",
       onChangeText: setBirthdate,
+      error: errors.birthdate,
+      errorMessage: "Data inválida"
     },
     {
-      name: 'Senha',
+      name: "Senha",
       value: password,
-      placeholder: 'Crie uma senha',
+      placeholder: "Crie uma senha",
       onChangeText: setPassword,
       secureTextEntry: true,
+      error: errors.password,
+      errorMessage: "A senha deve ter no mínimo 8 caracteres"
     },
     {
-      name: 'Confirmar Senha',
+      name: "Confirmar Senha",
       value: confirmPassword,
-      placeholder: 'Confirme sua senha',
+      placeholder: "Confirme sua senha",
       onChangeText: setConfirmPassword,
       secureTextEntry: true,
-      error: confirmPassword.length > 0 && confirmPassword !== password ? 'As senhas não correspondem' : undefined,
+      error: errors.confirmPassword,
+      errorMessage: "As senhas não correspondem"
     },
   ];
 
