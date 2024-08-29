@@ -22,19 +22,19 @@ export default function Index() {
         Acesse sua conta
       </Heading>
       <Center className="mt-24 mx-12">
-        <VStack space="xl" className="mb-8">
+        <VStack space="xl" className="mb-8 w-full">
           <Text>Email</Text>
           <Input className='w-full mb-2 rounded-md p-2'>
             <InputField placeholder="Digite seu email" />
           </Input>
           <Text>Senha</Text>
-          <Input className='w-full rounded-md p-2'>
+          <Input className='w-full mb-4 rounded-md p-2'>
             <InputField placeholder="Digite sua senha" />
           </Input>
+          <Button className="w-full p-2 rounded-md bg-primary-700">
+            <ButtonText className="text-center color-white">Entrar</ButtonText>
+          </Button>
         </VStack>
-        <Button size="sm" className="w-full p-2 rounded-md bg-primary-700">
-          <ButtonText className="text-center color-white">Entrar</ButtonText>
-        </Button>
       </Center>
     </>
   );
