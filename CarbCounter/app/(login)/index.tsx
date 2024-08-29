@@ -4,6 +4,7 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button"
 import { Pressable } from '@/components/ui/pressable';
+import { Divider } from '@/components/ui/divider';
 import { router } from 'expo-router';
 
 
@@ -38,7 +39,7 @@ export default function Index() {
           <Text>!</Text>
         </Box>
 
-        <Box className="bg-gray-300 mx-12 h-[1px]" />
+        <Divider orientation='horizontal'/>
 
         <Box className='flex flex-row justify-center my-4'>
           <Text>Vai acompanhar alguém?</Text>

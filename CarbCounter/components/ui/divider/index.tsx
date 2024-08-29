@@ -7,7 +7,7 @@ import { cssInterop } from 'nativewind';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
 const dividerStyle = tva({
-  base: 'bg-background-200',
+  base: 'bg-gray-300',
   variants: {
     orientation: {
       vertical: 'w-px h-full',
