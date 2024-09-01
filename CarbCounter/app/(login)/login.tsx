@@ -4,9 +4,16 @@ import { Center } from "@/components/ui/center";
 import { Input, InputField } from '@/components/ui/input';
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from '@/components/ui/vstack';
+import { router } from 'expo-router';
 
 
 export default function Index() {
+
+  const handleLogin = () => {
+    router.dismissAll()
+    router.replace('/user')
+  }
+
   return (
     <>
       <Heading
@@ -31,8 +38,13 @@ export default function Index() {
           <Input className='w-full mb-4 rounded-md p-2'>
             <InputField placeholder="Digite sua senha" />
           </Input>
-          <Button className="w-full p-2 rounded-md bg-primary-700">
-            <ButtonText className="text-center color-white">Entrar</ButtonText>
+          <Button size="sm" className="w-full p-2 rounded-md bg-primary-700">
+            <ButtonText
+              className="text-center color-white"
+              onPress={handleLogin}
+            >
+              Entrar
+            </ButtonText>
           </Button>
         </VStack>
       </Center>
