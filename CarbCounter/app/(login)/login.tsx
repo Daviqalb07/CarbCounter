@@ -5,6 +5,7 @@ import { Input, InputField } from '@/components/ui/input';
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from '@/components/ui/vstack';
 import { router } from 'expo-router';
+import { FormControl, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
 
 
 export default function Index() {
@@ -23,26 +24,34 @@ export default function Index() {
         CarbCounter
       </Heading>
       <Heading
-        className="text-center -mt-4 mb-4"
+        className="text-center mb-4"
         size="lg"
       >
         Acesse sua conta
       </Heading>
       <Center className="mt-24 mx-12">
-        <VStack space="xl" className="mb-8 w-full">
-          <Text>Email</Text>
-          <Input className='w-full mb-2 rounded-md p-2'>
-            <InputField placeholder="Digite seu email" />
-          </Input>
-          <Text>Senha</Text>
-          <Input className='w-full mb-4 rounded-md p-2'>
-            <InputField placeholder="Digite sua senha" />
-          </Input>
-          <Button size="sm" className="w-full p-2 rounded-md bg-primary-700">
-            <ButtonText
-              className="text-center color-white"
-              onPress={handleLogin}
-            >
+        <VStack space="md" className="w-full">
+          <FormControl>
+            <FormControlLabel>
+              <FormControlLabelText>Email</FormControlLabelText>
+            </FormControlLabel>
+            <Input className='w-full rounded-md p-2'>
+              <InputField placeholder="Digite seu email" />
+            </Input>
+          </FormControl>
+          <FormControl>
+            <FormControlLabel>
+              <FormControlLabelText>Senha</FormControlLabelText>
+            </FormControlLabel>
+            <Input className='w-full rounded-md p-2'>
+              <InputField placeholder="Digite sua senha" />
+            </Input>
+          </FormControl>
+          <Button
+            className="mt-8 w-full p-2 rounded-md bg-primary-700"
+            onPress={handleLogin}
+          >
+            <ButtonText className="text-center color-white">
               Entrar
             </ButtonText>
           </Button>

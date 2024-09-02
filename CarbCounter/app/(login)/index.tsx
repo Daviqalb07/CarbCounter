@@ -20,7 +20,7 @@ export default function Index() {
       </Heading>
 
       <Center className="mt-24 px-12 items-center">
-        <Heading className="text-center px-12" size="xl">
+        <Heading className="text-center px-12 mb-4" size="xl">
           Inicie uma revolução na sua vida alimentar.
         </Heading>
 
