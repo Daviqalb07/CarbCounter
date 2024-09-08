@@ -5,6 +5,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { ScrollView } from "react-native";
 import { Button } from "@/components/ui/button";
+import { router } from "expo-router";
 
 const nutritionInfo = {
     calories: 600,
@@ -29,6 +30,10 @@ const meals = [
 ];
 
 const HomeScreen = () => {
+    const newMeal = () => {
+        router.navigate("/user/meal/register")
+    }
+
     return (
         <>
             <ScrollView>
@@ -54,7 +59,7 @@ const HomeScreen = () => {
             </ScrollView>
             <Button
                 className="absolute bottom-4 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
-                onPress={() => console.log("UPLOAD NEW IMAGE")}
+                onPress={newMeal}
             >
 
                 <Ionicons name="camera" size={45} color="white" />
