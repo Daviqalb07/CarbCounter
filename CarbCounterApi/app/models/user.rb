@@ -33,6 +33,8 @@ class User < ApplicationRecord
   validates :birthDate, presence: true
   validates :professionalRegister, presence: true, if: -> { role == 'professional' }
 
+  has_many :meals, dependent: :destroy
+
   def role?(base_role)
     role == base_role.to_s
   end
