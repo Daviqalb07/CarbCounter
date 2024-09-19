@@ -3,8 +3,11 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  birth_date             :date
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  name                   :string
+#  professional_register  :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
@@ -26,6 +29,9 @@ class User < ApplicationRecord
   ROLES = %w[patient supervisor professional].freeze
 
   validates :role, inclusion: { in: ROLES }
+  validates :name, presence: true
+  validates :birthDate, presence: true
+  validates :professionalRegister, presence: true, if: -> { role == 'professional' }
 
   def role?(base_role)
     role == base_role.to_s
