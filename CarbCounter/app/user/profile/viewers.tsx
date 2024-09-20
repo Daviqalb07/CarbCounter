@@ -44,8 +44,9 @@ export default function ViewersScreen() {
                 Profissionais
             </Text>
 
-            {professionals.map((professional) => (
+            {professionals.map((professional, index) => (
                 <ViewerItem
+                    key={index}
                     name={professional.name}
                 />
             ))}
@@ -54,8 +55,9 @@ export default function ViewersScreen() {
                 Supervisores
             </Text>
 
-            {supervisors.map((supervisor) => (
+            {supervisors.map((supervisor, index) => (
                 <ViewerItem
+                    key={index}
                     name={supervisor.name}
                 />
             ))}
