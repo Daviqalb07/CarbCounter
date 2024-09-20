@@ -20,7 +20,7 @@ export default function HomeTabLayout() {
             iconName = "book";
           } else if (route.name === "index") {
             iconName = "home";
-          } else if (route.name === "Perfil") {
+          } else if (route.name === "profile") {
             iconName = "person";
           }
 
@@ -32,6 +32,9 @@ export default function HomeTabLayout() {
       })}>
         <Tabs.Screen
           name="index" options={{ title: "Início" }}
+        />
+        <Tabs.Screen
+          name="profile" options={{ title: "Perfil" }}
         />
       </Tabs>
     </>
