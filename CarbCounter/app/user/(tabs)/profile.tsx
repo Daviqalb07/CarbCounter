@@ -1,4 +1,5 @@
 import React from 'react';
+import { router } from 'expo-router';
 import { View } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Button, ButtonText } from '@/components/ui/button';
@@ -9,6 +10,7 @@ interface ListItemProps {
   label: string,
   itemColor: string
 }
+
 const ListItem = (props: ListItemProps) => (
   <Button
     onPress={props.onPress}
@@ -33,7 +35,7 @@ export default function ProfileScreen() {
 
       <ListItem
         label={"Ver profissionais e supervisores"}
-        onPress={() => console.log("Editar perfil")}
+        onPress={() => router.navigate("/user/profile/viewers")}
         itemColor="black"
       />
 

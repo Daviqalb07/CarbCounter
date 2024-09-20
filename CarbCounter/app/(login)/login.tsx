@@ -1,4 +1,3 @@
-import { Text } from '@/components/ui/text';
 import { Heading } from '@/components/ui/heading';
 import { Center } from "@/components/ui/center";
 import { Input, InputField } from '@/components/ui/input';
