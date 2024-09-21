@@ -31,6 +31,9 @@ export default function HomeTabLayout() {
         headerShown: false
       })}>
         <Tabs.Screen
+          name="reports" options={{ title: "Relatórios" }}
+        />
+        <Tabs.Screen
           name="index" options={{ title: "Início" }}
         />
         <Tabs.Screen

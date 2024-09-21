@@ -6,6 +6,7 @@ import { Text } from "@/components/ui/text";
 import { ScrollView } from "react-native";
 import { Button } from "@/components/ui/button";
 import { router } from "expo-router";
+import { Box } from "@/components/ui/box";
 
 const nutritionInfo = {
     calories: 600,
@@ -37,10 +38,13 @@ const HomeScreen = () => {
     return (
         <>
             <ScrollView>
-                <NutritionInfo
-                    calories={nutritionInfo.calories}
-                    carbohydrates={nutritionInfo.carbohydrates}
-                />
+                <Box className="my-6 px-5">
+
+                    <NutritionInfo
+                        calories={nutritionInfo.calories}
+                        carbohydrates={nutritionInfo.carbohydrates}
+                    />
+                </Box>
 
                 <Text className="text-black text-2xl font-bold mb-3 text-center">Refeições do dia</Text>
 

@@ -9,7 +9,7 @@ interface NutritionInfoProps {
 
 const NutritionInfo = (props: NutritionInfoProps) => {
     return (
-        <HStack className="justify-between items-center my-6 px-5 gap-5">
+        <HStack className="justify-between items-center gap-5">
             <Box className="flex-1 flex-col gap-2 bg-white rounded-lg px-5 py-2 mx-1">
                 <Text className="text-center text-lg font-bold">Calorias</Text>
                 <Box className="flex flex-row gap-1 items-end justify-center">
