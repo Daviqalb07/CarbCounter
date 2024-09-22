@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import { Divider } from '@/components/ui/divider';
 import { useState } from 'react';
+import { router } from "expo-router";
 
 const ReportScreen = () => {
     const [selectedRange, setSelectedRange] = useState(7);
@@ -48,9 +49,9 @@ const ReportScreen = () => {
                     selectedValue={selectedRange.toString()}
                     onValueChange={handleTimeRangeSelection}
                 >
-                    <SelectTrigger variant="rounded" size="md" className="border-primary-400" >
-                        <SelectInput className="w-36 text-primary-400" />
-                        <SelectIcon className="mr-4 text-primary-400" as={ChevronDownIcon} />
+                    <SelectTrigger variant="rounded" size="md" className="w-44 border-primary-400 justify-between" >
+                        <SelectInput className="text-primary-400" />
+                        <SelectIcon className="mr-2 text-primary-400" as={ChevronDownIcon} />
                     </SelectTrigger>
                     <SelectPortal >
                         <SelectBackdrop />
@@ -82,7 +83,13 @@ const ReportScreen = () => {
                                 />
                             </Box>
 
-                            <Button variant="link" className="justify-between px-2 mb-1">
+                            <Button
+                                variant="link"
+                                className="justify-between px-2 mb-1"
+                                onPress={() => {
+                                    router.push("/user/reports/meals")
+                                }}
+                            >
                                 <Text className="text-lg">Ver Refeições</Text>
                                 <ButtonIcon as={ChevronRightIcon} />
                             </Button>
