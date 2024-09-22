@@ -1,17 +1,8 @@
 import MealCard from "@/components/MealCard";
-import NutritionInfo from "@/components/NutritionInfo";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { View, ScrollView } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { ScrollView } from "react-native";
-import { Button } from "@/components/ui/button";
-import { router } from "expo-router";
-import { Box } from "@/components/ui/box";
-
-const nutritionInfo = {
-    calories: 600,
-    carbohydrates: 110
-}
+import { Stack } from "expo-router";
 
 const meals = [
     {
@@ -30,23 +21,12 @@ const meals = [
     }
 ];
 
-const HomeScreen = () => {
-    const newMeal = () => {
-        router.navigate("/user/meal/register")
-    }
-
+export default function MealsReportScreen() {
+    const day = "10 set 2024"
     return (
-        <>
+        <View className="flex-1 py-4">
+            <Text className="text-2xl text-black text-center font-bold my-4">Refeições de {day}</Text>
             <ScrollView>
-                <Box className="my-6 px-5">
-
-                    <NutritionInfo
-                        calories={nutritionInfo.calories}
-                        carbohydrates={nutritionInfo.carbohydrates}
-                    />
-                </Box>
-
-                <Text className="text-black text-2xl font-bold mb-3 text-center">Refeições do dia</Text>
 
                 <VStack>
                     {meals.map((meal, index) => (
@@ -61,16 +41,6 @@ const HomeScreen = () => {
                     ))}
                 </VStack>
             </ScrollView>
-            <Button
-                className="absolute bottom-4 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
-                onPress={newMeal}
-            >
-
-                <Ionicons name="camera" size={45} color="white" />
-            </Button>
-
-        </>
-    );
-};
-
-export default HomeScreen;
+        </View>
+    )
+}
