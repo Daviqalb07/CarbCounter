@@ -1,0 +1,35 @@
+# == Schema Information
+#
+# Table name: foods
+#
+#  id            :bigint           not null, primary key
+#  calories      :integer
+#  carbohydrates :integer
+#  name          :string
+#  portion       :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  meal_id       :bigint           not null
+#
+# Indexes
+#
+#  index_foods_on_meal_id  (meal_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (meal_id => meals.id)
+#
+
+one:
+  name: MyString
+  portion: MyString
+  calories: 1
+  carbohydrates: 1
+  meal: one
+
+two:
+  name: MyString
+  portion: MyString
+  calories: 1
+  carbohydrates: 1
+  meal: two
