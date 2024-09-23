@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { ScrollView, View } from "react-native"
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button"
 import { AddIcon } from "@/components/ui/icon"
 import { Image } from "@/components/ui/image"
@@ -17,6 +17,8 @@ const mealContent = [
 
 
 export default function EditMealScreen() {
+    const { imageData } = useLocalSearchParams()
+
     const [mealName, setMealName] = useState("")
 
     const handleSubmit = () => {
@@ -31,8 +33,10 @@ export default function EditMealScreen() {
     return (
         <View className="flex-1 px-4 py-6">
             <Image
-                source={{ uri: "https://www.mundoboaforma.com.br/wp-content/uploads/2019/09/hamburguer.jpg" }}
-                className="w-full h-48 rounded-lg my-4"
+                source={{
+                    uri: `data:image/png;base64,${imageData}`
+                }}
+                className="w-full h-1/2 rounded-lg my-4"
                 resizeMode="cover"
                 alt="Meal image"
             />
