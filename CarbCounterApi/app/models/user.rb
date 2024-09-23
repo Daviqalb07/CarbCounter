@@ -6,6 +6,7 @@
 #  birth_date             :date
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  jti                    :string
 #  name                   :string
 #  professional_register  :string
 #  remember_created_at    :datetime
@@ -18,20 +19,22 @@
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_jti                   (jti)
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
-#
 class User < ApplicationRecord
+  include Devise::JWT::RevocationStrategies::JTIMatcher
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :jwt_authenticatable, jwt_revocation_strategy: self
 
   ROLES = %w[patient supervisor professional].freeze
 
   validates :role, inclusion: { in: ROLES }
   validates :name, presence: true
-  validates :birthDate, presence: true
-  validates :professionalRegister, presence: true, if: -> { role == 'professional' }
+  validates :birth_date, presence: true
+  validates :professional_register, presence: true, if: -> { role == 'professional' }
 
   has_many :meals, dependent: :destroy
 
