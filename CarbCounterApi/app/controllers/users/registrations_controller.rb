@@ -7,7 +7,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource.save
     if resource.persisted?
       sign_up(resource_name, resource)
-      render json: { message: 'Signed up successfully'}, status: :ok
+      render json: { message: 'Signed up successfully', user: resource }, status: :ok
     else
       clean_up_passwords resource
       set_minimum_password_length

@@ -36,24 +36,22 @@ class Meal < ApplicationRecord
 
   def info
     {
-      meal: {
-        id: id,
-        name: name,
-        image: image,
-        created_at: created_at,
-        updated_at: updated_at,
-        total_calories: total_calories,
-        total_cho: total_cho,
-        foods: foods.map do |food|
-          {
-            id: food.id,
-            name: food.name,
-            portion: food.portion,
-            calories: food.calories,
-            carbohydrates: food.carbohydrates
-          }
-        end
-      }
+      id: id,
+      name: name,
+      image: image,
+      created_at: created_at,
+      updated_at: updated_at,
+      total_calories: total_calories,
+      total_cho: total_cho,
+      foods: foods.map do |food|
+        {
+          id: food.id,
+          name: food.name,
+          portion: food.portion,
+          calories: food.calories,
+          carbohydrates: food.carbohydrates
+        }
+      end
     }
   end
 

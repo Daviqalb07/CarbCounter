@@ -8,6 +8,13 @@ Rails.application.routes.draw do
   }
   namespace :api do
     resources :meals, only: [:create]
+    resources :patients, only: [:show] do
+      member do
+        get :meals
+        get :reports
+        get :reports_csv
+      end
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

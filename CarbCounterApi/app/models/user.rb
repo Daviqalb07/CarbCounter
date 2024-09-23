@@ -30,6 +30,7 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   ROLES = %w[patient supervisor professional].freeze
+  REPORTS_FILTERS = %w[last_week last_month last_year]
 
   validates :role, inclusion: { in: ROLES }
   validates :name, presence: true
@@ -41,4 +42,41 @@ class User < ApplicationRecord
   def role?(base_role)
     role == base_role.to_s
   end
+
+  def generate_reports(filter)
+    return unless REPORTS_FILTERS.include?(filter)
+  
+    start_date = case filter
+                 when 'last_week'
+                   1.week.ago.beginning_of_day
+                 when 'last_month'
+                   1.month.ago.beginning_of_day
+                 when 'last_year'
+                   1.year.ago.beginning_of_day
+                 end
+
+  
+    meals_within_filter = meals.where('created_at >= ?', start_date)
+ 
+    meals_grouped_by_day = meals_within_filter.group_by { |meal| meal.created_at.to_date }
+
+  
+    total_calories = meals_within_filter.sum { |meal| meal.total_calories }
+    total_carbohydrates = meals_within_filter.sum { |meal| meal.total_cho }
+  
+    report = {
+      total_calories: total_calories,
+      total_carbohydrates: total_carbohydrates,
+      meals_by_day: meals_grouped_by_day.transform_values do |meals|
+        {
+          total_calories: meals.sum(&:total_calories),
+          total_carbohydrates: meals.sum(&:total_cho),
+          meals: meals.map(&:info)
+        }
+      end
+    }
+  
+    report
+  end
+  
 end
