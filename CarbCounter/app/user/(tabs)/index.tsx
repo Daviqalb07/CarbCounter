@@ -31,8 +31,8 @@ const meals = [
 ];
 
 const HomeScreen = () => {
-    const newMeal = () => {
-        router.navigate("/user/meal/register")
+    const openCameraView = () => {
+        router.push("/user/camera")
     }
 
     return (
@@ -63,7 +63,7 @@ const HomeScreen = () => {
             </ScrollView>
             <Button
                 className="absolute bottom-4 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
-                onPress={newMeal}
+                onPress={openCameraView}
             >
 
                 <Ionicons name="camera" size={45} color="white" />
