@@ -1,34 +1,68 @@
-import { useState } from "react"
-import { ScrollView, View } from "react-native"
+import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Button, ButtonText, ButtonIcon } from "@/components/ui/button"
-import { AddIcon } from "@/components/ui/icon"
-import { Image } from "@/components/ui/image"
-import { Divider } from "@/components/ui/divider"
-import { Input, InputField } from "@/components/ui/input"
-import FoodItemEditable from "@/components/FoodItemEditable";
-
-const mealContent = [
-    { name: 'Pão de Hamburger', portion: '67 g' },
-    { name: 'Carne', portion: '200 g' },
-    { name: 'Alface', portion: '5 g' },
-    { name: 'Batata Frita', portion: '200 g' }
-];
+import { View, ScrollView } from "react-native";
+import { Text } from "@/components/ui/text";
+import { Box } from "@/components/ui/box";
+import { Image } from "@/components/ui/image";
+import { Divider } from "@/components/ui/divider";
+import InfoCircle from "@/components/InfoCircle";
+import FoodItemCompleteInfo from "@/components/FoodItemCompleteInfo";
 
 
-export default function EditMealScreen() {
-    const { imageData } = useLocalSearchParams()
+export default function MealInfoScreen() {
+    const { name, mealContent, imageData }: {
+        name: string,
+        mealContent: string,
+        imageData: string
+    } = useLocalSearchParams();
+    const parsedMealContent = mealContent ? JSON.parse(mealContent) : [];
+    const [mealInfo, setMealInfo] = useState({
+        name: name,
+        image: imageData,
+        content: [],
+        calories: 0,
+        carbohydrates: 0
+    });
 
-    const [mealName, setMealName] = useState("")
+    let totalCalories = 0;
+    let totalCarbohydrates = 0;
 
-    const handleSubmit = () => {
-        router.replace({
-            pathname: "/user/meal/[id]",
-            params: {
-                id: 1
+    const postMealContent = async () => {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/nutrition`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(parsedMealContent),
+            });
+
+            if (!response.ok) {
+                router.back()
             }
-        })
-    }
+
+            const result = await response.json();
+            result.data.forEach(item => {
+                totalCalories += item.calories || 0;
+                totalCarbohydrates += item.carbohydrates || 0;
+            });
+
+            setMealInfo((previous) => (
+                {
+                    ...previous,
+                    content: result.data,
+                    calories: totalCalories,
+                    carbohydrates: totalCarbohydrates
+                }
+            ))
+        } catch (error) {
+            console.error("Erro:", error);
+        }
+    };
+
+    useEffect(() => {
+        postMealContent();
+    }, []);
 
     return (
         <View className="flex-1 px-4 py-6">
@@ -40,41 +74,40 @@ export default function EditMealScreen() {
                 resizeMode="cover"
                 alt="Meal image"
             />
-            <Input className="px-4 mb-4 h-12">
-                <InputField
-                    className="text-lg text-center"
-                    placeholder="Nome da refeição"
-                    onChangeText={setMealName}
+
+            <Text className="px-4 mb-4 text-bold text-2xl text-center">
+                {mealInfo.name}
+            </Text>
+
+            <Divider orientation="horizontal" />
+
+            <Box className="my-4 flex-row justify-between px-14">
+                <InfoCircle
+                    value={mealInfo.calories}
+                    text="kcal"
+                    color="#40A578"
                 />
-            </Input>
+                <InfoCircle
+                    value={mealInfo.carbohydrates}
+                    text="g CHO"
+                    color="#006769"
+                />
+            </Box>
 
             <Divider orientation="horizontal" />
 
             <ScrollView className="mt-4 px-2">
-                {mealContent.map((foodInfo, index) => (
-                    <FoodItemEditable
+                {mealInfo.content.length > 0 ? (mealInfo.content.map((foodInfo, index) => (
+                    <FoodItemCompleteInfo
                         key={index}
                         name={foodInfo.name}
                         portion={foodInfo.portion}
+                        calories={foodInfo.calories}
+                        carbohydrates={foodInfo.carbohydrates}
                     />
-                ))}
-                <Button
-                    action="default"
-                    className="flex-1 mb-2 items-center justify-start p-0 gap-2"
-                    onPress={() => console.log("ADDING NEW INGREDIENT")}
-                >
-                    <ButtonIcon as={AddIcon} className="text-typography-500" />
-                    <ButtonText className="text-typography-500">Adicionar alimento</ButtonText>
-                </Button>
+                ))) : <></>}
+
             </ScrollView>
-
-            <Button
-                className="bg-primary-600 my-4 py-2 h-12 rounded-lg"
-                onPress={handleSubmit}
-            >
-                <ButtonText className="text-white text-center text-lg">Cadastrar</ButtonText>
-            </Button>
         </View>
-
     )
 }
