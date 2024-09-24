@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { SignupForm, SignupFormField } from '@/components/SignupForm';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 export default function ProfessionalSignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,30 +20,76 @@ export default function ProfessionalSignUpScreen() {
     confirmPassword: false
   });
 
+  const registerProfessional = async () => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            name,
+            email,
+            birth_date: birthdate,
+            password,
+            password_confirmation: confirmPassword,
+            role: 'professional',
+            professional_register: professionalRegister
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Erro ao registrar:', errorData);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...errorData.errors,
+        }));
+      } else {
+        const data = await response.json();
+        const token = response.headers.get('Authorization');
+        if (token) {
+          await AsyncStorage.setItem('authToken', token);
+          await AsyncStorage.setItem('user', JSON.stringify(data.user));
+          router.dismissAll();
+          router.replace("/professional")
+        } else {
+          throw new Error('Token not found');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao registrar:', error);
+    }
+  };
+
   const handleSubmit = () => {
-    // const nameError = name.length < 3;
-    // const professionalRegisterError = professionalRegister.length < 3;
-    // const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    // const passwordError = password.length < 8;
-    // const confirmPasswordError = confirmPassword !== password;
+    const nameError = name.length < 3;
+    const professionalRegisterError = professionalRegister.length < 3;
+    const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordError = password.length < 8;
+    const confirmPasswordError = confirmPassword !== password;
 
-    // const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/;
-    // const birthdateError = !birthdateRegex.test(birthdate);
+    const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/;
+    const birthdateError = !birthdateRegex.test(birthdate);
 
-    // setErrors({
-    //   name: nameError,
-    //   email: emailError,
-    //   professionalRegister: professionalRegisterError,
-    //   birthdate: birthdateError,
-    //   password: passwordError,
-    //   confirmPassword: confirmPasswordError
-    // });
+    setErrors({
+      name: nameError,
+      email: emailError,
+      professionalRegister: professionalRegisterError,
+      birthdate: birthdateError,
+      password: passwordError,
+      confirmPassword: confirmPasswordError
+    });
 
-    // if (Object.values(errors).some(value => !value)) {
-    //   console.log('Form submitted:', { name, email, professionalRegister, birthdate, password, confirmPassword });
-    // }
+    if (Object.values(errors).some(value => !value)) {
+      console.log('Form submitted:', { name, email, professionalRegister, birthdate, password, confirmPassword });
+    }
 
-    router.replace("/professional")
+    if (Object.values(errors).some(value => !value)) {
+      registerProfessional();
+    }
   };
 
   const fields: SignupFormField[] = [
@@ -97,9 +146,7 @@ export default function ProfessionalSignUpScreen() {
     },
   ];
 
-
   return (
     <SignupForm fields={fields} onSubmit={handleSubmit} />
   )
 }
-

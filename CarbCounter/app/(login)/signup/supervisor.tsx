@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { SignupForm, SignupFormField } from '@/components/SignupForm';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+
 
 export default function SupervisorSignUpScreen() {
   const [name, setName] = useState('');
@@ -16,27 +18,69 @@ export default function SupervisorSignUpScreen() {
     confirmPassword: false
   });
 
+  const registerSupervisor = async () => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            name,
+            email,
+            birth_date: birthdate,
+            password,
+            password_confirmation: confirmPassword,
+            role: 'supervisor'
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Erro ao registrar:', errorData);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...errorData.errors,
+        }));
+      } else {
+        const data = await response.json();
+        const token = response.headers.get('Authorization');
+        if (token) {
+          await AsyncStorage.setItem('authToken', token);
+          await AsyncStorage.setItem('user', JSON.stringify(data.user));
+          router.dismissAll();
+          router.replace('/supervisor');
+        } else {
+          throw new Error('Token not found');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao registrar:', error);
+    }
+  };
+
   const handleSubmit = () => {
-    // const nameError = name.length < 3;
-    // const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    // const passwordError = password.length < 8;
-    // const confirmPasswordError = confirmPassword !== password
+    const nameError = name.length < 3;
+    const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordError = password.length < 8;
+    const confirmPasswordError = confirmPassword !== password
 
-    // const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/
-    // const birthdateError = !birthdateRegex.test(birthdate);
+    const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/
+    const birthdateError = !birthdateRegex.test(birthdate);
 
-    // setErrors({
-    //   name: nameError,
-    //   email: emailError,
-    //   birthdate: birthdateError,
-    //   password: passwordError,
-    //   confirmPassword: confirmPasswordError
-    // });
+    setErrors({
+      name: nameError,
+      email: emailError,
+      birthdate: birthdateError,
+      password: passwordError,
+      confirmPassword: confirmPasswordError
+    });
 
-    // if (Object.values(errors).some(value => !value)) {
-    //   console.log('Form submitted:', { name, email, birthdate, password, confirmPassword });
-    // }
-    router.replace("/supervisor")
+    if (Object.values(errors).some(value => !value)) {
+      registerSupervisor();
+    }
   };
 
   const fields: SignupFormField[] = [
@@ -85,9 +129,7 @@ export default function SupervisorSignUpScreen() {
     },
   ];
 
-
   return (
     <SignupForm fields={fields} onSubmit={handleSubmit} />
   )
 }
-
