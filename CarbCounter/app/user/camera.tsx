@@ -44,7 +44,7 @@ export default function CameraScreen() {
             const takedPhoto = await cameraRef.current.takePictureAsync(options)
             setPhoto(takedPhoto)
             router.replace({
-                pathname: "/user/meal/register",
+                pathname: "/user/meal/edit",
                 params: {
                     imageData: takedPhoto?.base64
                 }
