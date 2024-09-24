@@ -33,7 +33,7 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   ROLES = %w[patient supervisor professional].freeze
-  REPORTS_FILTERS = %w[last_week last_month last_year]
+  REPORTS_FILTERS = %w[last_week last_fortnight last_month]
 
   before_create :generate_unique_code
 
@@ -41,7 +41,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :birth_date, presence: true
   validates :professional_register, presence: true, if: -> { role == 'professional' }
-  validates :unique_code, presence: true, uniqueness: true
+  validates :unique_code, uniqueness: true
 
 
   has_many :meals, dependent: :destroy
@@ -83,8 +83,8 @@ class User < ApplicationRecord
                    1.week.ago.beginning_of_day
                  when 'last_month'
                    1.month.ago.beginning_of_day
-                 when 'last_year'
-                   1.year.ago.beginning_of_day
+                 when 'last_fortnight'
+                   2.week.ago.beginning_of_day
                  end
 
   
@@ -99,7 +99,7 @@ class User < ApplicationRecord
     report = {
       total_calories: total_calories,
       total_carbohydrates: total_carbohydrates,
-      meals_by_day: meals_grouped_by_day.transform_values do |meals|
+      meals_by_day: meals_grouped_by_day.sort_by { |date, _| -date.to_time.to_i }.to_h.transform_values do |meals|
         {
           total_calories: meals.sum(&:total_calories),
           total_carbohydrates: meals.sum(&:total_cho),
@@ -119,6 +119,7 @@ class User < ApplicationRecord
       role: role,
       created_at: created_at,
       updated_at: updated_at,
+      unique_code: unique_code
     }
 
     case role

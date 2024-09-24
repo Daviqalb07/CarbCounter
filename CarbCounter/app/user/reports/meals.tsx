@@ -3,40 +3,43 @@ import { View, ScrollView } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Stack } from "expo-router";
-
-const meals = [
-    {
-        mealName: "Almoço",
-        mealTime: "12:00",
-        calories: 300,
-        carbs: 55,
-        imageUrl: "https://cdn.folhape.com.br/upload/dn_arquivo/2023/09/whatsapp-image-2023-09-22-at-070623.jpeg",
-    },
-    {
-        mealName: "Café da Manhã",
-        mealTime: "08:00",
-        calories: 300,
-        carbs: 55,
-        imageUrl: "https://blog.ciaathletica.com.br/wp-content/uploads/2024/05/cafe-da-manha-simples-e-saudavel-para-comecar-o-dia-.jpg"
-    }
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from "react";
 
 export default function MealsReportScreen() {
-    const day = "10 set 2024"
+    const [dayMeals, setDayMeals] = useState([]);
+    const [day, setDay] = useState("");
+
+    useEffect(() => {
+        const fetchDayMeals = async () => {
+            try {
+                const storedMeals = await AsyncStorage.getItem('dayMeals');
+                if (storedMeals) {
+                    const parsedMeals = JSON.parse(storedMeals);
+                    setDayMeals(parsedMeals.meals);
+                    setDay(new Date(parsedMeals.date).toLocaleDateString('pt-BR'));
+                }
+            } catch (error) {
+                console.error("Failed to fetch day meals from async storage", error);
+            }
+        };
+
+        fetchDayMeals();
+    }, []);
+
     return (
         <View className="flex-1 py-4">
             <Text className="text-2xl text-black text-center font-bold my-4">Refeições de {day}</Text>
             <ScrollView>
-
                 <VStack>
-                    {meals.map((meal, index) => (
+                    {dayMeals.map((meal, index) => (
                         <MealCard
                             key={index}
-                            mealName={meal.mealName}
-                            mealTime={meal.mealTime}
-                            calories={meal.calories}
-                            carbs={meal.carbs}
-                            imageUrl={meal.imageUrl}
+                            mealName={meal.name}
+                            mealTime={new Date(meal.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                            calories={meal.total_calories}
+                            carbs={meal.total_cho}
+                            imageUrl={meal.image}
                         />
                     ))}
                 </VStack>

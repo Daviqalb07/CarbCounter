@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { HStack } from '@/components/ui/hstack';
 import { Button } from '@/components/ui/button';
 import { Icon, ChevronRightIcon, AddIcon } from '@/components/ui/icon';
 import { Avatar } from '@/components/ui/avatar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ViewerItemProps {
     name: string
@@ -12,7 +13,6 @@ const ViewerItem = (props: ViewerItemProps) => {
     const name = props.name
     return (
         <Button
-            onPress={() => console.log('Ver perfil de', name)}
             variant="link"
             className="h-16 w-full my-2 justify-between items-center border-b border-gray-300"
         >
@@ -23,20 +23,29 @@ const ViewerItem = (props: ViewerItemProps) => {
                 </Avatar>
                 <Text className="text-xl">{name}</Text>
             </HStack>
-
-            <Icon as={ChevronRightIcon} />
         </Button>
     )
 }
 export default function ViewersScreen() {
-    const professionals = [
-        { name: "Carla" },
-        { name: "Synara" }
-    ];
+    const [userProfessionals, setUserProfessionals] = useState([]);
+    const [userSupervisors, setUserSupervisors] = useState([]);
 
-    const supervisors = [
-        { name: "Danielo" }
-    ];
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userData = await AsyncStorage.getItem('user');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    setUserProfessionals(user.professionals || []);
+                    setUserSupervisors(user.supervisors || []);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     return (
         <View className="flex-1 p-4">
@@ -44,7 +53,7 @@ export default function ViewersScreen() {
                 Profissionais
             </Text>
 
-            {professionals.map((professional, index) => (
+            {userProfessionals.map((professional, index) => (
                 <ViewerItem
                     key={index}
                     name={professional.name}
@@ -55,21 +64,12 @@ export default function ViewersScreen() {
                 Supervisores
             </Text>
 
-            {supervisors.map((supervisor, index) => (
+            {userSupervisors.map((supervisor, index) => (
                 <ViewerItem
                     key={index}
                     name={supervisor.name}
                 />
             ))}
-
-            <Button
-                className="absolute bottom-10 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
-                onPress={() => console.log("ADDING VIEWER")}
-            >
-
-                <Icon as={AddIcon} className="text-white h-12 w-12" />
-            </Button>
         </View>
     );
 };
-

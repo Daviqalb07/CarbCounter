@@ -20,22 +20,65 @@ import {
     SelectItem
 } from '@/components/ui/select';
 import { Divider } from '@/components/ui/divider';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { router } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ReportScreen = () => {
-    const [selectedRange, setSelectedRange] = useState(7);
+    const [selectedRange, setSelectedRange] = useState('last_week');
+    const [reportsData, setReportsData] = useState({});
+    const [user, setUser] = useState(null);
+    const [isUserLoaded, setIsUserLoaded] = useState(false);
 
-    const reportsData = [
-        { date: '10 set 2024', calories: 600, carbs: 110 },
-        { date: '09 set 2024', calories: 600, carbs: 110 },
-        { date: '08 set 2024', calories: 600, carbs: 110 },
-        { date: '07 set 2024', calories: 600, carbs: 110 },
-    ];
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await AsyncStorage.getItem('user');
+            if (userData) {
+                setUser(JSON.parse(userData));
+                setIsUserLoaded(true);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    const fetchReportsData = async (range) => {
+        if (user) {
+            try {
+                const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${user.id}/reports?filter=${range}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `${await AsyncStorage.getItem('authToken')}`
+                    }
+                });
+                const data = await response.json();
+                console.log(data)
+                setReportsData(data);
+            } catch (error) {
+                console.error("Error fetching reports data:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (isUserLoaded) {
+            fetchReportsData(selectedRange);
+        }
+    }, [selectedRange, isUserLoaded]);
 
     const handleTimeRangeSelection = (value: string) => {
-        setSelectedRange(Number(value))
-    }
+        setSelectedRange(value);
+    };
+
+    const handlePress = async (date, data) => {
+        router.push("/user/reports/meals");
+        const dayMeals = {
+            date: date,
+            meals: data.meals
+        };
+        await AsyncStorage.setItem('dayMeals', JSON.stringify(dayMeals));
+    };
 
     return (
         <View className="flex-1 p-4 mt-4">
@@ -46,7 +89,7 @@ const ReportScreen = () => {
 
                 <Select
                     initialLabel="Últimos 7 dias"
-                    selectedValue={selectedRange.toString()}
+                    selectedValue={selectedRange}
                     onValueChange={handleTimeRangeSelection}
                 >
                     <SelectTrigger variant="rounded" size="md" className="w-44 border-primary-400 justify-between" >
@@ -59,36 +102,33 @@ const ReportScreen = () => {
                             <SelectDragIndicatorWrapper >
                                 <SelectDragIndicator />
                             </SelectDragIndicatorWrapper>
-                            <SelectItem label="Últimos 7 dias" value="7" />
-                            <SelectItem label="Últimos 14 dias" value="14" />
-                            <SelectItem label="Último mês" value="30" />
+                            <SelectItem label="Últimos 7 dias" value="last_week" />
+                            <SelectItem label="Últimos 14 dias" value="last_fortnight" />
+                            <SelectItem label="Último mês" value="last_month" />
                         </SelectContent>
                     </SelectPortal>
                 </Select>
-
             </HStack>
 
             <ScrollView >
-                {reportsData.map((report, index) => (
+                {Object.entries(reportsData?.meals_by_day || {}).map(([date, data], index) => (
                     <Box key={index} className="mt-4">
                         <VStack >
                             <Text className="font-bold text-xl">
-                                {report.date}
+                                {new Date(date).toLocaleDateString('pt-BR')}
                             </Text>
 
                             <Box className="my-2">
                                 <NutritionInfo
-                                    calories={report.calories}
-                                    carbohydrates={report.carbs}
+                                    calories={data.total_calories}
+                                    carbohydrates={data.total_carbohydrates}
                                 />
                             </Box>
 
                             <Button
                                 variant="link"
                                 className="justify-between px-2 mb-1"
-                                onPress={() => {
-                                    router.push("/user/reports/meals")
-                                }}
+                                onPress={() => handlePress(date, data)}
                             >
                                 <Text className="text-lg">Ver Refeições</Text>
                                 <ButtonIcon as={ChevronRightIcon} />
