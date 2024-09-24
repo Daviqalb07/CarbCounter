@@ -15,6 +15,11 @@ Rails.application.routes.draw do
         get :reports_csv
       end
     end
+
+    post 'supervisors/:id/patients', to: 'supervisors#add_patient'
+    get 'supervisors/:id/patients', to: 'supervisors#get_patients'
+    post 'professionals/:id/patients', to: 'professionals#add_patient'
+    get 'professionals/:id/patients', to: 'professionals#get_patients'
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
