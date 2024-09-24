@@ -100,6 +100,15 @@ export default function SupervisorScreen() {
         }
     };
 
+    const setPatientAndNavigate = async (patient) => {
+        try {
+            await AsyncStorage.setItem('patient', JSON.stringify(patient));
+            router.push('/user');
+        } catch (error) {
+            console.error('Erro ao setar paciente:', error);
+        }
+    };
+
     return (
         <Box className="flex-1 p-4">
             <Box className="p-4">
@@ -122,7 +131,7 @@ export default function SupervisorScreen() {
                 {supervisedPatients.map((item, index) => (
                     <Button
                         key={index}
-                        onPress={() => router.push(`/supervisor/patient/${item.id}`)} // Redirect to patient profile
+                        onPress={() => setPatientAndNavigate(item)} // Redirect to patient profile
                         variant="link"
                         className="h-16 w-full mb-2 justify-between items-center border-b border-gray-300"
                     >
