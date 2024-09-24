@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { SignupForm, SignupFormField } from '@/components/SignupForm';
+import { router } from 'expo-router';
 
-export default function ProfessionalSignUpScreen() {
+export default function SupervisorSignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -16,25 +17,26 @@ export default function ProfessionalSignUpScreen() {
   });
 
   const handleSubmit = () => {
-    const nameError = name.length < 3;
-    const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const passwordError = password.length < 8;
-    const confirmPasswordError = confirmPassword !== password
+    // const nameError = name.length < 3;
+    // const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // const passwordError = password.length < 8;
+    // const confirmPasswordError = confirmPassword !== password
 
-    const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/
-    const birthdateError = !birthdateRegex.test(birthdate);
+    // const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/
+    // const birthdateError = !birthdateRegex.test(birthdate);
 
-    setErrors({
-      name: nameError,
-      email: emailError,
-      birthdate: birthdateError,
-      password: passwordError,
-      confirmPassword: confirmPasswordError
-    });
+    // setErrors({
+    //   name: nameError,
+    //   email: emailError,
+    //   birthdate: birthdateError,
+    //   password: passwordError,
+    //   confirmPassword: confirmPasswordError
+    // });
 
-    if (Object.values(errors).some(value => !value)) {
-      console.log('Form submitted:', { name, email, birthdate, password, confirmPassword });
-    }
+    // if (Object.values(errors).some(value => !value)) {
+    //   console.log('Form submitted:', { name, email, birthdate, password, confirmPassword });
+    // }
+    router.replace("/supervisor")
   };
 
   const fields: SignupFormField[] = [
