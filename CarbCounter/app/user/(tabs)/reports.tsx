@@ -45,7 +45,8 @@ const ReportScreen = () => {
     const fetchReportsData = async (range) => {
         if (user) {
             try {
-                const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${user.id}/reports?filter=${range}`, {
+                const patientId = user.role === 'patient' ? user.id : JSON.parse(await AsyncStorage.getItem('patient')).id;
+                const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${patientId}/reports?filter=${range}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

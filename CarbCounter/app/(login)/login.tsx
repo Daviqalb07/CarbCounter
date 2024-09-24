@@ -34,7 +34,13 @@ export default function Index() {
         await AsyncStorage.setItem('authToken', token);
         await AsyncStorage.setItem('user', JSON.stringify(data.user));
         router.dismissAll();
-        router.replace('/user');
+        if (data.user.role === 'professional') {
+          router.replace('/professional');
+        } else if (data.user.role === 'supervisor') {
+          router.replace('/supervisor');
+        } else {
+          router.replace('/user');
+        }
       } else {
         throw new Error('Token not found');
       }

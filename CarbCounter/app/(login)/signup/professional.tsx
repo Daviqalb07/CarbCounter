@@ -8,14 +8,12 @@ export default function ProfessionalSignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [professionalRegister, setProfessionalRegister] = useState('');
-  const [birthdate, setBirthdate] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({
     name: false,
     email: false,
     professionalRegister: false,
-    birthdate: false,
     password: false,
     confirmPassword: false
   });
@@ -31,7 +29,6 @@ export default function ProfessionalSignUpScreen() {
           user: {
             name,
             email,
-            birth_date: birthdate,
             password,
             password_confirmation: confirmPassword,
             role: 'professional',
@@ -54,7 +51,7 @@ export default function ProfessionalSignUpScreen() {
           await AsyncStorage.setItem('authToken', token);
           await AsyncStorage.setItem('user', JSON.stringify(data.user));
           router.dismissAll();
-          router.replace('/user');
+          router.replace("/professional")
         } else {
           throw new Error('Token not found');
         }
@@ -71,17 +68,17 @@ export default function ProfessionalSignUpScreen() {
     const passwordError = password.length < 8;
     const confirmPasswordError = confirmPassword !== password;
 
-    const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/;
-    const birthdateError = !birthdateRegex.test(birthdate);
-
     setErrors({
       name: nameError,
       email: emailError,
       professionalRegister: professionalRegisterError,
-      birthdate: birthdateError,
       password: passwordError,
       confirmPassword: confirmPasswordError
     });
+
+    if (Object.values(errors).some(value => !value)) {
+      console.log('Form submitted:', { name, email, professionalRegister, password, confirmPassword });
+    }
 
     if (Object.values(errors).some(value => !value)) {
       registerProfessional();
@@ -113,14 +110,6 @@ export default function ProfessionalSignUpScreen() {
       onChangeText: setProfessionalRegister,
       error: errors.professionalRegister,
       errorMessage: "Registro profissional inválido",
-    },
-    {
-      name: "Data de nascimento",
-      value: birthdate,
-      placeholder: "__/__/____",
-      onChangeText: setBirthdate,
-      error: errors.birthdate,
-      errorMessage: "Data inválida"
     },
     {
       name: "Senha",

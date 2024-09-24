@@ -39,7 +39,6 @@ class User < ApplicationRecord
 
   validates :role, inclusion: { in: ROLES }
   validates :name, presence: true
-  validates :birth_date, presence: true
   validates :professional_register, presence: true, if: -> { role == 'professional' }
   validates :unique_code, uniqueness: true
 

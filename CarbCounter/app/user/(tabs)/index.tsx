@@ -36,7 +36,8 @@ const HomeScreen = () => {
         const fetchMeals = async () => {
             if (user) {
                 try {
-                    const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${user.id}/meals`, {
+                    const patientId = user.role === 'patient' ? user.id : JSON.parse(await AsyncStorage.getItem('patient')).id;
+                    const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${patientId}/meals`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -96,13 +97,14 @@ const HomeScreen = () => {
                     ))}
                 </VStack>
             </ScrollView>
-            <Button
-                className="absolute bottom-4 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
-                onPress={openCameraView}
-            >
-
-                <Ionicons name="camera" size={45} color="white" />
-            </Button>
+            {user?.role === 'patient' && (
+                <Button
+                    className="absolute bottom-4 right-4 bg-primary-500 w-20 h-20 rounded-full items-center justify-center shadow-lg p-0"
+                    onPress={openCameraView}
+                >
+                    <Ionicons name="camera" size={45} color="white" />
+                </Button>
+            )}
 
         </>
     );
