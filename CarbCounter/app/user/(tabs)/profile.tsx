@@ -78,10 +78,16 @@ export default function ProfileScreen() {
         </>
       )}
 
-      {user?.role === 'patient' && (
+      {user?.role === 'patient' ? (
         <ListItem
           label={"Ver profissionais e supervisores"}
           onPress={() => router.navigate("/user/profile/viewers")}
+          itemColor="black"
+        />
+      ) : (
+        <ListItem
+          label={"Ver pacientes"}
+          onPress={() => router.navigate(`/${user?.role}`)}
           itemColor="black"
         />
       )}

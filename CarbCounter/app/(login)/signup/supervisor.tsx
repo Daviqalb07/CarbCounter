@@ -3,17 +3,14 @@ import { SignupForm, SignupFormField } from '@/components/SignupForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 
-
 export default function SupervisorSignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [birthdate, setBirthdate] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({
     name: false,
     email: false,
-    birthdate: false,
     password: false,
     confirmPassword: false
   });
@@ -29,7 +26,6 @@ export default function SupervisorSignUpScreen() {
           user: {
             name,
             email,
-            birth_date: birthdate,
             password,
             password_confirmation: confirmPassword,
             role: 'supervisor'
@@ -65,15 +61,11 @@ export default function SupervisorSignUpScreen() {
     const nameError = name.length < 3;
     const emailError = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const passwordError = password.length < 8;
-    const confirmPasswordError = confirmPassword !== password
-
-    const birthdateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/
-    const birthdateError = !birthdateRegex.test(birthdate);
+    const confirmPasswordError = confirmPassword !== password;
 
     setErrors({
       name: nameError,
       email: emailError,
-      birthdate: birthdateError,
       password: passwordError,
       confirmPassword: confirmPasswordError
     });
@@ -100,14 +92,6 @@ export default function SupervisorSignUpScreen() {
       keyboardType: "email-address",
       error: errors.email,
       errorMessage: "Email inválido"
-    },
-    {
-      name: "Data de nascimento",
-      value: birthdate,
-      placeholder: "__/__/____",
-      onChangeText: setBirthdate,
-      error: errors.birthdate,
-      errorMessage: "Data inválida"
     },
     {
       name: "Senha",

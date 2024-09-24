@@ -30,6 +30,7 @@ export default function MealInfoScreen() {
 
     const postMealContent = async () => {
         try {
+            console.log("Starting image upload...");
             const response = await fetch(`${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/nutrition`, {
                 method: "POST",
                 headers: {
@@ -37,7 +38,8 @@ export default function MealInfoScreen() {
                 },
                 body: JSON.stringify(parsedMealContent),
             });
-
+            console.log(`Image upload completed`);
+            
             if (!response.ok) {
                 router.back()
             }
@@ -65,7 +67,7 @@ export default function MealInfoScreen() {
         try {
             const formData = new FormData();
             formData.append('image', image);
-
+            console.log("Starting image upload...");
             const response = await fetch(`${process.env.EXPO_PUBLIC_IMGUR_API_URL}`, {
                 method: 'POST',
                 headers: {
@@ -73,6 +75,7 @@ export default function MealInfoScreen() {
                 },
                 body: formData,
             });
+            console.log(`Image upload completed`);
 
             if (!response.ok) {
                 console.error("Failed to upload image to Imgur");

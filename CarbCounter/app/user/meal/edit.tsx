@@ -21,10 +21,13 @@ export default function EditMealScreen() {
         formData.append("image", imageData);
 
         try {
+            console.log("Starting image upload...");
             const response = await fetch(apiUrl, {
                 method: "POST",
                 body: formData
             });
+
+            console.log(`Image upload completed`);
 
             if (!response.ok) {
                 router.back()
