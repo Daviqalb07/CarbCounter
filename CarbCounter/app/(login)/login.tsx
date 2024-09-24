@@ -5,14 +5,44 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from '@/components/ui/vstack';
 import { router } from 'expo-router';
 import { FormControl, FormControlLabel, FormControlLabelText } from '@/components/ui/form-control';
-
+import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
 
-  const handleLogin = () => {
-    router.dismissAll()
-    router.replace('/user')
-  }
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user: { email, password } }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+      const token = response.headers.get('Authorization');
+      if (token) {
+        await AsyncStorage.setItem('authToken', token);
+        await AsyncStorage.setItem('user', JSON.stringify(data.user));
+        router.dismissAll();
+        router.replace('/user');
+      } else {
+        throw new Error('Token not found');
+      }
+    } catch (error) {
+      console.error('Login error:', error); // Log the actual error
+      setError('Login failed. Please check your credentials and try again.');
+    }
+  };
 
   return (
     <>
@@ -35,7 +65,7 @@ export default function Index() {
               <FormControlLabelText>Email</FormControlLabelText>
             </FormControlLabel>
             <Input className='w-full rounded-md p-2'>
-              <InputField placeholder="Digite seu email" />
+              <InputField placeholder="Digite seu email" value={email} onChangeText={setEmail} />
             </Input>
           </FormControl>
           <FormControl>
@@ -43,7 +73,7 @@ export default function Index() {
               <FormControlLabelText>Senha</FormControlLabelText>
             </FormControlLabel>
             <Input className='w-full rounded-md p-2'>
-              <InputField placeholder="Digite sua senha" />
+              <InputField placeholder="Digite sua senha" value={password} onChangeText={setPassword} secureTextEntry />
             </Input>
           </FormControl>
           <Button

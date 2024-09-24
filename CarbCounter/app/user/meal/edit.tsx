@@ -94,7 +94,7 @@ export default function EditMealScreen() {
                 className="bg-primary-600 my-4 py-2 h-12 rounded-lg"
                 onPress={handleSubmit}
             >
-                <ButtonText className="text-white text-center text-lg">Cadastrar</ButtonText>
+                <ButtonText className="text-white text-center text-lg">Avançar</ButtonText>
             </Button>
         </View>
 

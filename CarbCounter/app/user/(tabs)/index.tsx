@@ -1,5 +1,7 @@
 import MealCard from "@/components/MealCard";
+import { useState, useEffect } from "react";
 import NutritionInfo from "@/components/NutritionInfo";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
@@ -13,36 +15,69 @@ const nutritionInfo = {
     carbohydrates: 110
 }
 
-const meals = [
-    {
-        mealName: "Almoço",
-        mealTime: "12:00",
-        calories: 300,
-        carbs: 55,
-        imageUrl: "https://cdn.folhape.com.br/upload/dn_arquivo/2023/09/whatsapp-image-2023-09-22-at-070623.jpeg",
-    },
-    {
-        mealName: "Café da Manhã",
-        mealTime: "08:00",
-        calories: 300,
-        carbs: 55,
-        imageUrl: "https://blog.ciaathletica.com.br/wp-content/uploads/2024/05/cafe-da-manha-simples-e-saudavel-para-comecar-o-dia-.jpg"
-    }
-];
-
 const HomeScreen = () => {
+    const [meals, setMeals] = useState([]);
+    const [user, setUser] = useState(null);
+    const [isUserLoaded, setIsUserLoaded] = useState(false);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await AsyncStorage.getItem('user');
+            if (userData) {
+                setUser(JSON.parse(userData));
+                setIsUserLoaded(true);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        const fetchMeals = async () => {
+            if (user) {
+                try {
+                    const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/api/patients/${user.id}/meals`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `${await AsyncStorage.getItem('authToken')}`
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data)
+                        setMeals(data);
+                    } else {
+                        console.error("Failed to fetch meals");
+                    }
+                } catch (error) {
+                    console.error("Error fetching meals:", error);
+                }
+            }
+        };
+
+        if (isUserLoaded) {
+            fetchMeals();
+        }
+    }, [isUserLoaded, user]);
+
     const openCameraView = () => {
         router.push("/user/camera")
     }
+
+    const totalNutrition = meals.reduce((acc, meal) => {
+        acc.calories += meal.total_calories;
+        acc.carbohydrates += meal.total_cho;
+        return acc;
+    }, { calories: 0, carbohydrates: 0 });
 
     return (
         <>
             <ScrollView>
                 <Box className="my-6 px-5">
-
                     <NutritionInfo
-                        calories={nutritionInfo.calories}
-                        carbohydrates={nutritionInfo.carbohydrates}
+                        calories={totalNutrition.calories}
+                        carbohydrates={totalNutrition.carbohydrates}
                     />
                 </Box>
 
@@ -52,11 +87,11 @@ const HomeScreen = () => {
                     {meals.map((meal, index) => (
                         <MealCard
                             key={index}
-                            mealName={meal.mealName}
-                            mealTime={meal.mealTime}
-                            calories={meal.calories}
-                            carbs={meal.carbs}
-                            imageUrl={meal.imageUrl}
+                            mealName={meal.name}
+                            mealTime={new Date(meal.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                            calories={meal.total_calories}
+                            carbs={meal.total_cho}
+                            imageUrl={meal.image}
                         />
                     ))}
                 </VStack>

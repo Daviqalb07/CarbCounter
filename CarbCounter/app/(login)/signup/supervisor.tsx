@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { SignupForm, SignupFormField } from '@/components/SignupForm';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
-export default function ProfessionalSignUpScreen() {
+
+export default function SupervisorSignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -14,6 +17,49 @@ export default function ProfessionalSignUpScreen() {
     password: false,
     confirmPassword: false
   });
+
+  const registerSupervisor = async () => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_CARBCOUNTER_API_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            name,
+            email,
+            birth_date: birthdate,
+            password,
+            password_confirmation: confirmPassword,
+            role: 'supervisor'
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Erro ao registrar:', errorData);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...errorData.errors,
+        }));
+      } else {
+        const data = await response.json();
+        const token = response.headers.get('Authorization');
+        if (token) {
+          await AsyncStorage.setItem('authToken', token);
+          await AsyncStorage.setItem('user', JSON.stringify(data.user));
+          router.dismissAll();
+          router.replace('/user');
+        } else {
+          throw new Error('Token not found');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao registrar:', error);
+    }
+  };
 
   const handleSubmit = () => {
     const nameError = name.length < 3;
@@ -33,7 +79,7 @@ export default function ProfessionalSignUpScreen() {
     });
 
     if (Object.values(errors).some(value => !value)) {
-      console.log('Form submitted:', { name, email, birthdate, password, confirmPassword });
+      registerSupervisor();
     }
   };
 
@@ -83,9 +129,7 @@ export default function ProfessionalSignUpScreen() {
     },
   ];
 
-
   return (
     <SignupForm fields={fields} onSubmit={handleSubmit} />
   )
 }
-
