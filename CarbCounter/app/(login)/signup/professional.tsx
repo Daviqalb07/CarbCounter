@@ -91,6 +91,7 @@ export default function ProfessionalSignUpScreen() {
       value: name,
       placeholder: "Seu Nome",
       onChangeText: setName,
+      autoCapitalize: "words",
       error: errors.name,
       errorMessage: "Digite seu nome completo"
     },
@@ -100,6 +101,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Seu email",
       onChangeText: setEmail,
       keyboardType: "email-address",
+      autoCapitalize: "none",
       error: errors.email,
       errorMessage: "Email inválido"
     },
@@ -109,6 +111,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Seu registro profissional",
       onChangeText: setProfessionalRegister,
       error: errors.professionalRegister,
+      keyboardType: "numeric",
       errorMessage: "Registro profissional inválido",
     },
     {
@@ -116,6 +119,7 @@ export default function ProfessionalSignUpScreen() {
       value: password,
       placeholder: "Crie uma senha",
       onChangeText: setPassword,
+      autoCapitalize: "none",
       secureTextEntry: true,
       error: errors.password,
       errorMessage: "A senha deve ter no mínimo 8 caracteres"
@@ -126,6 +130,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Confirme sua senha",
       onChangeText: setConfirmPassword,
       secureTextEntry: true,
+      autoCapitalize: "none",
       error: errors.confirmPassword,
       errorMessage: "As senhas não correspondem"
     },

@@ -8,7 +8,7 @@ import { Icon, SearchIcon, ChevronRightIcon } from '@/components/ui/icon';
 import { Avatar } from '@/components/ui/avatar';
 import { HStack } from '@/components/ui/hstack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router } from 'expo-router'; // Import the router
+import { router } from 'expo-router';
 
 export default function SupervisorScreen() {
     const [search, setSearch] = useState('');
@@ -69,7 +69,7 @@ export default function SupervisorScreen() {
                 const data = await response.json();
                 console.log('Sucesso', data.message);
                 setCode('');
-                fetchSupervisedPatients(); // Refresh the list of supervised patients
+                fetchSupervisedPatients();
             }
         } catch (error) {
             console.error('Erro ao adicionar supervisionado:', error);
@@ -131,7 +131,7 @@ export default function SupervisorScreen() {
                 {supervisedPatients.map((item, index) => (
                     <Button
                         key={index}
-                        onPress={() => setPatientAndNavigate(item)} // Redirect to patient profile
+                        onPress={() => setPatientAndNavigate(item)}
                         variant="link"
                         className="h-16 w-full mb-2 justify-between items-center border-b border-gray-300"
                     >
@@ -152,6 +152,7 @@ export default function SupervisorScreen() {
                     className="border border-gray-300 rounded-md p-2 mt-4"
                     value={code}
                     onChangeText={setCode}
+                    keyboardType="numeric"
                 />
             </Box>
 

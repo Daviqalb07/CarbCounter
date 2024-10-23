@@ -36,7 +36,6 @@ export default function ProfessionalSignUpScreen() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Erro ao registrar:', errorData);
-        // Atualize os erros com base na resposta da API
         setErrors((prevErrors) => ({
           ...prevErrors,
           ...errorData.errors,
@@ -82,6 +81,7 @@ export default function ProfessionalSignUpScreen() {
       value: name,
       placeholder: "Seu Nome",
       onChangeText: setName,
+      autoCapitalize: "words",
       error: errors.name,
       errorMessage: "Digite seu nome completo"
     },
@@ -91,6 +91,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Seu email",
       onChangeText: setEmail,
       keyboardType: "email-address",
+      autoCapitalize: "none",
       error: errors.email,
       errorMessage: "Email inválido"
     },
@@ -100,6 +101,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Crie uma senha",
       onChangeText: setPassword,
       secureTextEntry: true,
+      autoCapitalize: "none",
       error: errors.password,
       errorMessage: "A senha deve ter no mínimo 8 caracteres"
     },
@@ -109,6 +111,7 @@ export default function ProfessionalSignUpScreen() {
       placeholder: "Confirme sua senha",
       onChangeText: setConfirmPassword,
       secureTextEntry: true,
+      autoCapitalize: "none",
       error: errors.confirmPassword,
       errorMessage: "As senhas não correspondem"
     },
