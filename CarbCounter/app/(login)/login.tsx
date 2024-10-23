@@ -45,7 +45,7 @@ export default function Index() {
         throw new Error('Token not found');
       }
     } catch (error) {
-      console.error('Login error:', error); // Log the actual error
+      console.error('Login error:', error);
       setError('Login failed. Please check your credentials and try again.');
     }
   };
@@ -71,7 +71,12 @@ export default function Index() {
               <FormControlLabelText>Email</FormControlLabelText>
             </FormControlLabel>
             <Input className='w-full rounded-md p-2'>
-              <InputField placeholder="Digite seu email" value={email} onChangeText={setEmail} />
+              <InputField
+                placeholder="Digite seu email"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+              />
             </Input>
           </FormControl>
           <FormControl>
@@ -79,7 +84,12 @@ export default function Index() {
               <FormControlLabelText>Senha</FormControlLabelText>
             </FormControlLabel>
             <Input className='w-full rounded-md p-2'>
-              <InputField placeholder="Digite sua senha" value={password} onChangeText={setPassword} secureTextEntry />
+              <InputField placeholder="Digite sua senha"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+              />
             </Input>
           </FormControl>
           <Button

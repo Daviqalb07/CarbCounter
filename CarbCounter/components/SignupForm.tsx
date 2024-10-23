@@ -3,7 +3,7 @@ import {
     View,
     Text,
     TextInput,
-    KeyboardTypeOptions
+    TextInputProps
 } from 'react-native';
 import {
     FormControl,
@@ -17,15 +17,10 @@ import {
 } from './ui/button';
 
 
-export interface SignupFormField {
+export interface SignupFormField extends TextInputProps {
     name: string;
-    value: string;
-    placeholder: string;
     error?: boolean;
     errorMessage?: string;
-    keyboardType?: KeyboardTypeOptions;
-    secureTextEntry?: boolean;
-    onChangeText: (text: string) => void;
 }
 
 export interface SignupFormProps {
@@ -51,6 +46,7 @@ export function SignupForm(props: SignupFormProps) {
                         placeholder={field.placeholder}
                         keyboardType={field.keyboardType}
                         secureTextEntry={field.secureTextEntry}
+                        autoCapitalize={field.autoCapitalize}
                     />
                     {field.error && <FormControlErrorText>{field.errorMessage}</FormControlErrorText>}
                 </FormControl>

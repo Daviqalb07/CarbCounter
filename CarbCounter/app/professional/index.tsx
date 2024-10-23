@@ -69,7 +69,7 @@ export default function ProfessionalScreen() {
                 const data = await response.json();
                 console.log('Sucesso', data.message);
                 setCode('');
-                fetchPatients(); // Refresh the list of patients
+                fetchPatients();
             }
         } catch (error) {
             console.error('Erro ao adicionar paciente:', error);
@@ -87,7 +87,7 @@ export default function ProfessionalScreen() {
                     'Content-Type': 'application/json'
                 }
             });
-    
+
             if (response.ok) {
                 await AsyncStorage.removeItem('authToken');
                 await AsyncStorage.removeItem('user');
@@ -153,6 +153,7 @@ export default function ProfessionalScreen() {
                     className="border border-gray-300 rounded-md p-2 mt-4"
                     value={code}
                     onChangeText={setCode}
+                    keyboardType="numeric"
                 />
             </Box>
 
