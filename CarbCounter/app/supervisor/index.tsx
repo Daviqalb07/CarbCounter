@@ -119,7 +119,7 @@ export default function SupervisorScreen() {
                 <Input className="px-4 mb-4 h-12 w-full">
                     <InputField
                         className="text-lg"
-                        placeholder="Buscar paciente"
+                        placeholder="Buscar supervisionado"
                         value={search}
                         onChangeText={setSearch}
                     />
@@ -148,7 +148,7 @@ export default function SupervisorScreen() {
 
             <Box className="px-4">
                 <TextInput
-                    placeholder="Insira o código para adicionar paciente"
+                    placeholder="Insira o código para adicionar supervisionado"
                     className="border border-gray-300 rounded-md p-2 mt-4"
                     value={code}
                     onChangeText={setCode}
