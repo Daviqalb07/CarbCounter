@@ -23,6 +23,8 @@ services:
     build: NutritionApiServer
     ports:
       - "20002:5000"
+    volumes:
+      - ./NutritionApiServer:/usr/src/app
     environment:
       - FLASK_ENV=${FLASK_ENV}
 
