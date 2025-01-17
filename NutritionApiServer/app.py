@@ -16,8 +16,8 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 @app.route("/meal/estimation/nutrition", methods=["POST"])
 def nutrition_values():
-    data = request.get_json()
-    food_info = json.dumps(data, ensure_ascii=False)
+    request_data = request.get_json()
+    food_info = json.dumps(request_data, ensure_ascii=False)
     prompt = f"""
     {food_info}
     Você é um especialista em nutrição. Dado a lista JSON que contém os alimentos e as porções
@@ -40,6 +40,8 @@ def nutrition_values():
 
 @app.route("/meal/estimation/portions", methods=["POST"])
 def portions_estimation():
+    request_data = request.get_json()
+    
     prompt = """
     Você é um especialista em nutrição. Analise a imagem dessa refeição, 
     reconheça os alimentos e estime as porções de cada um.
@@ -53,7 +55,7 @@ def portions_estimation():
     """
     image_data = {
         "mime_type": "image/png",
-        "data": request.form.get("image")
+        "data": request_data.get("image")
     }
 
     response = model.generate_content([prompt, image_data])

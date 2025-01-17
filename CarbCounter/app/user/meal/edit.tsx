@@ -17,24 +17,27 @@ export default function EditMealScreen() {
     const postImageData = async () => {
         const apiUrl = `${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/portions`;
 
-        const formData = new FormData();
-        formData.append("image", imageData);
-
         try {
             console.log("Starting image upload...");
             const response = await fetch(apiUrl, {
                 method: "POST",
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "image": imageData
+                })
             });
 
             console.log(`Image upload completed`);
 
             if (!response.ok) {
-                router.back()
+                router.back();
+                return;
             }
 
             const jsonResponse = await response.json();
-            setMealContent(jsonResponse.data)
+            setMealContent(jsonResponse.data);
         } catch (error) {
             console.error("Erro ao enviar a imagem:", error);
         }
