@@ -5,7 +5,9 @@ import { EditIcon, CloseCircleIcon } from "./ui/icon";
 
 interface FoodItemEditableProps {
     name: string,
-    portion: string
+    portion: string,
+    onEdit: () => void,
+    onDelete: () => void
 }
 
 export default function FoodItemEditable(props: FoodItemEditableProps) {
@@ -19,7 +21,7 @@ export default function FoodItemEditable(props: FoodItemEditableProps) {
                 <Button
                     action="default"
                     className="p-2 bg-transparent"
-                    onPress={() => console.log("EDITING")}
+                    onPress={props.onEdit}
                 >
                     <ButtonIcon as={EditIcon} className="text-typography-500" />
                 </Button>
@@ -27,7 +29,7 @@ export default function FoodItemEditable(props: FoodItemEditableProps) {
                 <Button
                     action="default"
                     className="p-2 bg-transparent"
-                    onPress={() => console.log("DELETING")}
+                    onPress={props.onDelete}
                 >
                     <ButtonIcon as={CloseCircleIcon} className="text-red-500" />
                 </Button>

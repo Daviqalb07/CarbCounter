@@ -84,6 +84,14 @@ export default function EditMealScreen() {
                         key={index}
                         name={foodInfo.name}
                         portion={foodInfo.portion}
+                        onEdit={() => {
+                            console.log("EDITING")
+                        }}
+                        onDelete={() => {
+                            setMealContent(prevContent => 
+                                prevContent.filter((_, i) => i !== index)
+                            );
+                        }}
                     />
                 ))) : <></>}
                 <Button
