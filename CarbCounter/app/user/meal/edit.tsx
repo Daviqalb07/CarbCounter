@@ -2,13 +2,12 @@ import { useState, useEffect } from "react"
 import { ScrollView, View } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button"
-import { Icon, AddIcon, CloseIcon } from "@/components/ui/icon"
+import { AddIcon} from "@/components/ui/icon"
 import { Image } from "@/components/ui/image"
 import { Divider } from "@/components/ui/divider"
 import { Input, InputField } from "@/components/ui/input"
 import FoodItemEditable from "@/components/FoodItemEditable";
-import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton } from "@/components/ui/modal"
-import { Heading } from "@/components/ui/heading";
+import FoodModal from "@/components/FoodModal";
 
 export default function EditMealScreen() {
     const { imageData }: { imageData: string } = useLocalSearchParams()
@@ -16,6 +15,7 @@ export default function EditMealScreen() {
     const [mealName, setMealName] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [newFood, setNewFood] = useState({ name: "", portion: "" })
+    const [editingFood, setEditingFood] = useState<{ index: number; food: { name: string, portion: string } } | null>(null)
 
     const postImageData = async () => {
         const apiUrl = `${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/portions`;
@@ -61,11 +61,16 @@ export default function EditMealScreen() {
         })
     }
 
-    const handleAddFood = () => {
-        if (newFood.name && newFood.portion) {
-            setMealContent(prev => [...prev, { name: newFood.name, portion: newFood.portion }])
-            setNewFood({ name: "", portion: "" })
-            setShowModal(false)
+    const handleAddFood = (food: { name: string, portion: string }) => {
+        setMealContent(prev => [...prev, food])
+    }
+    
+    const handleEditFood = (food: { name: string, portion: string }) => {
+        if (editingFood !== null) {
+            setMealContent(prev => prev.map((item, index) => 
+                index === editingFood.index ? food : item
+            ))
+            setEditingFood(null)
         }
     }
 
@@ -73,6 +78,7 @@ export default function EditMealScreen() {
         setNewFood({ name: "", portion: "" })
         setShowModal(false)
     }
+
 
     return (
         <View className="flex-1 px-4 py-6">
@@ -101,7 +107,8 @@ export default function EditMealScreen() {
                         name={foodInfo.name}
                         portion={foodInfo.portion}
                         onEdit={() => {
-                            console.log("EDITING")
+                            setEditingFood({ index, food: foodInfo });
+                            setShowModal(true);
                         }}
                         onDelete={() => {
                             setMealContent(prevContent => 
@@ -127,58 +134,13 @@ export default function EditMealScreen() {
                 <ButtonText className="text-white text-center text-lg">Avançar</ButtonText>
             </Button>
 
-            <Modal
+            <FoodModal 
                 isOpen={showModal}
                 onClose={handleCloseModal}
-                size="lg"
-            >
-                <ModalBackdrop />
-                <ModalContent>
-                    <ModalHeader>
-                        <Heading size="md" className="text-typography-950">
-                            Adicionar Alimento
-                        </Heading>
-                        <ModalCloseButton>
-                        <Icon
-                            as={CloseIcon}
-                            size="md"
-                            className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
-                        />
-                        </ModalCloseButton>
-                    </ModalHeader>
-                    <ModalBody>
-                        <Input className="mb-4">
-                            <InputField
-                                placeholder="Nome do alimento"
-                                value={newFood.name}
-                                onChangeText={(text) => setNewFood(prev => ({ ...prev, name: text }))}
-                            />
-                        </Input>
-                        
-                        <Input>
-                            <InputField
-                                placeholder="Porção (ex: 100g)"
-                                value={newFood.portion}
-                                onChangeText={(text) => setNewFood(prev => ({ ...prev, portion: text }))}
-                            />
-                        </Input>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            variant="outline"
-                            action="secondary"
-                            onPress={handleCloseModal}
-                        >
-                            <ButtonText>Cancelar</ButtonText>
-                        </Button>
-                        <Button
-                            onPress={handleAddFood}
-                        >
-                            <ButtonText>Adicionar</ButtonText>
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                onSubmit={editingFood ? handleEditFood : handleAddFood}
+                initialFood={editingFood?.food}
+                mode={editingFood ? 'edit' : 'add'}
+            />
         </View>
     )
 }
