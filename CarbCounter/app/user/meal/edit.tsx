@@ -2,17 +2,20 @@ import { useState, useEffect } from "react"
 import { ScrollView, View } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button"
-import { AddIcon } from "@/components/ui/icon"
+import { Icon, AddIcon, CloseIcon } from "@/components/ui/icon"
 import { Image } from "@/components/ui/image"
 import { Divider } from "@/components/ui/divider"
 import { Input, InputField } from "@/components/ui/input"
 import FoodItemEditable from "@/components/FoodItemEditable";
-
+import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton } from "@/components/ui/modal"
+import { Heading } from "@/components/ui/heading";
 
 export default function EditMealScreen() {
     const { imageData }: { imageData: string } = useLocalSearchParams()
     const [mealContent, setMealContent] = useState<{ name: string, portion: string }[]>([]);
     const [mealName, setMealName] = useState("")
+    const [showModal, setShowModal] = useState(false)
+    const [newFood, setNewFood] = useState({ name: "", portion: "" })
 
     const postImageData = async () => {
         const apiUrl = `${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/portions`;
@@ -58,6 +61,19 @@ export default function EditMealScreen() {
         })
     }
 
+    const handleAddFood = () => {
+        if (newFood.name && newFood.portion) {
+            setMealContent(prev => [...prev, { name: newFood.name, portion: newFood.portion }])
+            setNewFood({ name: "", portion: "" })
+            setShowModal(false)
+        }
+    }
+
+    const handleCloseModal = () => {
+        setNewFood({ name: "", portion: "" })
+        setShowModal(false)
+    }
+
     return (
         <View className="flex-1 px-4 py-6">
             <Image
@@ -97,7 +113,7 @@ export default function EditMealScreen() {
                 <Button
                     action="default"
                     className="flex-1 mb-2 items-center justify-start p-0 gap-2"
-                    onPress={() => console.log("ADDING NEW INGREDIENT")}
+                    onPress={() => setShowModal(true)}
                 >
                     <ButtonIcon as={AddIcon} className="text-typography-500" />
                     <ButtonText className="text-typography-500">Adicionar alimento</ButtonText>
@@ -110,7 +126,59 @@ export default function EditMealScreen() {
             >
                 <ButtonText className="text-white text-center text-lg">Avançar</ButtonText>
             </Button>
-        </View>
 
+            <Modal
+                isOpen={showModal}
+                onClose={handleCloseModal}
+                size="lg"
+            >
+                <ModalBackdrop />
+                <ModalContent>
+                    <ModalHeader>
+                        <Heading size="md" className="text-typography-950">
+                            Adicionar Alimento
+                        </Heading>
+                        <ModalCloseButton>
+                        <Icon
+                            as={CloseIcon}
+                            size="md"
+                            className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
+                        />
+                        </ModalCloseButton>
+                    </ModalHeader>
+                    <ModalBody>
+                        <Input className="mb-4">
+                            <InputField
+                                placeholder="Nome do alimento"
+                                value={newFood.name}
+                                onChangeText={(text) => setNewFood(prev => ({ ...prev, name: text }))}
+                            />
+                        </Input>
+                        
+                        <Input>
+                            <InputField
+                                placeholder="Porção (ex: 100g)"
+                                value={newFood.portion}
+                                onChangeText={(text) => setNewFood(prev => ({ ...prev, portion: text }))}
+                            />
+                        </Input>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            variant="outline"
+                            action="secondary"
+                            onPress={handleCloseModal}
+                        >
+                            <ButtonText>Cancelar</ButtonText>
+                        </Button>
+                        <Button
+                            onPress={handleAddFood}
+                        >
+                            <ButtonText>Adicionar</ButtonText>
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </View>
     )
 }
