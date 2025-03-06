@@ -8,7 +8,9 @@ class Api::PatientsController < ApplicationController
   end
 
   def meals
-    meals = @patient.meals.where('created_at >= ?', Date.today.beginning_of_day).map { |m| m.info }
+    meals = @patient.meals.where('created_at >= ?', Date.today.beginning_of_day)
+                         .order(created_at: :desc)
+                         .map { |m| m.info }
     render json: meals
   end
 
