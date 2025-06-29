@@ -2,17 +2,20 @@ import { useState, useEffect } from "react"
 import { ScrollView, View } from "react-native"
 import { router, useLocalSearchParams } from "expo-router";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button"
-import { AddIcon } from "@/components/ui/icon"
+import { AddIcon} from "@/components/ui/icon"
 import { Image } from "@/components/ui/image"
 import { Divider } from "@/components/ui/divider"
 import { Input, InputField } from "@/components/ui/input"
 import FoodItemEditable from "@/components/FoodItemEditable";
-
+import FoodModal from "@/components/FoodModal";
 
 export default function EditMealScreen() {
     const { imageData }: { imageData: string } = useLocalSearchParams()
     const [mealContent, setMealContent] = useState<{ name: string, portion: string }[]>([]);
     const [mealName, setMealName] = useState("")
+    const [showModal, setShowModal] = useState(false)
+    const [newFood, setNewFood] = useState({ name: "", portion: "" })
+    const [editingFood, setEditingFood] = useState<{ index: number; food: { name: string, portion: string } } | null>(null)
 
     const postImageData = async () => {
         const apiUrl = `${process.env.EXPO_PUBLIC_NUTRITION_API_URL}/meal/estimation/portions`;
@@ -58,6 +61,25 @@ export default function EditMealScreen() {
         })
     }
 
+    const handleAddFood = (food: { name: string, portion: string }) => {
+        setMealContent(prev => [...prev, food])
+    }
+    
+    const handleEditFood = (food: { name: string, portion: string }) => {
+        if (editingFood !== null) {
+            setMealContent(prev => prev.map((item, index) => 
+                index === editingFood.index ? food : item
+            ))
+            setEditingFood(null)
+        }
+    }
+
+    const handleCloseModal = () => {
+        setNewFood({ name: "", portion: "" })
+        setShowModal(false)
+    }
+
+
     return (
         <View className="flex-1 px-4 py-6">
             <Image
@@ -84,12 +106,21 @@ export default function EditMealScreen() {
                         key={index}
                         name={foodInfo.name}
                         portion={foodInfo.portion}
+                        onEdit={() => {
+                            setEditingFood({ index, food: foodInfo });
+                            setShowModal(true);
+                        }}
+                        onDelete={() => {
+                            setMealContent(prevContent => 
+                                prevContent.filter((_, i) => i !== index)
+                            );
+                        }}
                     />
                 ))) : <></>}
                 <Button
                     action="default"
                     className="flex-1 mb-2 items-center justify-start p-0 gap-2"
-                    onPress={() => console.log("ADDING NEW INGREDIENT")}
+                    onPress={() => setShowModal(true)}
                 >
                     <ButtonIcon as={AddIcon} className="text-typography-500" />
                     <ButtonText className="text-typography-500">Adicionar alimento</ButtonText>
@@ -102,7 +133,14 @@ export default function EditMealScreen() {
             >
                 <ButtonText className="text-white text-center text-lg">Avançar</ButtonText>
             </Button>
-        </View>
 
+            <FoodModal 
+                isOpen={showModal}
+                onClose={handleCloseModal}
+                onSubmit={editingFood ? handleEditFood : handleAddFood}
+                initialFood={editingFood?.food}
+                mode={editingFood ? 'edit' : 'add'}
+            />
+        </View>
     )
 }

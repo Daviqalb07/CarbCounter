@@ -138,7 +138,7 @@ export default function MealInfoScreen() {
                 source={{
                     uri: `data:image/png;base64,${image}`
                 }}
-                className="w-full h-1/2 rounded-lg my-4"
+                className="w-full h-1/4 rounded-lg my-4"
                 resizeMode="cover"
                 alt="Meal image"
             />
